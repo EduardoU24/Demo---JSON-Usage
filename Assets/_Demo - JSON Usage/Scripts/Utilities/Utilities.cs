@@ -1,6 +1,7 @@
 ﻿namespace DemoJSON
 {
 	using System;
+	using System.Collections;
 	using System.Collections.Generic;
 	using System.IO;
 	using System.Security.Cryptography;
@@ -66,6 +67,39 @@
 			_md5 = Utilities.GetFileMD5(_fileName);
 
 			return File.ReadAllText(_fullPath);
+		}
+
+		public static void DelayedActionAfterEndOfFrame(this MonoBehaviour mono, Action _action)
+		{
+			mono.StartCoroutine(mono.DelayedCoroutineAfterEndOfFrame(_action));
+		}
+
+		public static void DelayedActionAfterSeconds(this MonoBehaviour mono, float _time, Action _action)
+		{
+			mono.StartCoroutine(mono.DelayedCoroutineAfterSeconds(_time, _action));
+		}
+
+		public static void DelayedActionAfterSecondsRealtime(this MonoBehaviour mono, float _time, Action _action)
+		{
+			mono.StartCoroutine(mono.DelayedCoroutineAfterSecondsRealtime(_time, _action));
+		}
+
+		public static IEnumerator DelayedCoroutineAfterEndOfFrame(this MonoBehaviour mono, Action _action)
+		{
+			yield return new WaitForEndOfFrame();
+			_action?.Invoke();
+		}
+
+		public static IEnumerator DelayedCoroutineAfterSeconds(this MonoBehaviour mono, float _time, Action _action)
+		{
+			yield return new WaitForSeconds(_time);
+			_action?.Invoke();
+		}
+
+		public static IEnumerator DelayedCoroutineAfterSecondsRealtime(this MonoBehaviour mono, float _time, Action _action)
+		{
+			yield return new WaitForSecondsRealtime(_time);
+			_action?.Invoke();
 		}
 	}
 

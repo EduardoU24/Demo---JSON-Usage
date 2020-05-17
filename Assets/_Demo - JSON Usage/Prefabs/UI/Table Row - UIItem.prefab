@@ -51,7 +51,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   background: {fileID: 4052237536112115560}
-  columns: []
+  tableColumnUIItemPrefab: {fileID: 437011571954045975, guid: 97493bd4105193a41b8ac0c6aea211cc,
+    type: 3}
+  tableColumnBuiltUIItems: []
 --- !u!114 &4052237535889798925
 MonoBehaviour:
   m_ObjectHideFlags: 0

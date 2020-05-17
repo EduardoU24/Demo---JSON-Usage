@@ -25,6 +25,8 @@
 		public TextMeshProUGUI title;
 		public Button button;
 		public RectTransform contentHolder;
+		public TableRowUIItem tableRowUIItemPrefab;
+		public List<TableRowUIItem> tableRowBuiltUIItems = new List<TableRowUIItem>();
 
 		[Header("TestFilePaths - Remove This")]
 		public List<string> testJsonFilePaths;
@@ -39,7 +41,8 @@
 
 		void OnDisable()
 		{
-			StopCoroutine(_watchFileChangesCoroutine);
+			if(_watchFileChangesCoroutine != null)
+				StopCoroutine(_watchFileChangesCoroutine);
 		}
 
 		IEnumerator IEStart()
@@ -72,10 +75,13 @@
 		public void FetchLastFile()
 		{
 			loadedData = FetchDataFromFile(lastFileName, out string _md5, out bool _changed);
-			if (_changed)
+			lastFileMD5 = _md5;
+			Debug.Log($"Changed: {_changed}");
+			if(_changed)
 				Build();
 		}
 
+		[ContextMenu("Build")]
 		public void Build()
 		{
 			Debug.Log($"Building...");
@@ -84,11 +90,53 @@
 				Debug.Log("Not builing on editor...");
 				return;
 			}
+
 			button.interactable = false;
+
+			CleanBuiltItems();
 
 			title.text = loadedData.Title;
 
-			button.interactable = true;
+			this.DelayedActionAfterEndOfFrame(() => {
+
+				TableRowUIItem _headerRow = Instantiate(tableRowUIItemPrefab, contentHolder);
+				List<DemoTableColumnData> _headerColumns = new List<DemoTableColumnData>();
+
+				foreach (string _header in loadedData.ColumnHeaders)
+				{
+					_headerColumns.Add(new DemoTableColumnData()
+					{
+						key = "header",
+						value = _header
+					});
+				}
+
+				_headerRow.Build(_headerColumns, true);
+				tableRowBuiltUIItems.Add(_headerRow);
+
+
+				foreach (DemoTableRowData _column in loadedData.Data)
+				{
+					TableRowUIItem _row = Instantiate(tableRowUIItemPrefab, contentHolder);
+					_row.Build(_column.items, false);
+
+					tableRowBuiltUIItems.Add(_row);
+				}
+
+				button.interactable = true;
+
+			});
+		}
+
+		[ContextMenu("CleanBuiltItems")]
+		public void CleanBuiltItems()
+		{
+			foreach(var _item in tableRowBuiltUIItems)
+			{
+				_item.gameObject.SetActive(false);
+				Destroy(_item, 0.1f);
+			}
+			tableRowBuiltUIItems.Clear();
 		}
 
 
@@ -98,14 +146,14 @@
 
 		public DemoTableData FetchDataFromFile(string _filePath, out string _md5, out bool _changed)
 		{
-			_changed = false;
 			if (!Utilities.CheckFileHasChanged(_filePath, lastFileMD5))
 			{
 				Debug.Log($"Data hasn't changed on {_filePath}. Nothing to do here");
 				_md5 = lastFileMD5;
-				_changed = true;
+				_changed = false;
 				return loadedData;
 			}
+			_changed = true;
 
 			string _fileContent = Utilities.GetFileContent(_filePath, out string _newMD5);
 			_md5 = _newMD5;
