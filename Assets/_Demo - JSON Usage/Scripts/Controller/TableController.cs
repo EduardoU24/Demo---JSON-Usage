@@ -21,9 +21,10 @@
 		private float watchFileChangesIntervalTime = 4f;
 		private Coroutine _watchFileChangesCoroutine;
 
-		[Header("Watch Intervals")]
+		[Header("UI Building")]
 		public TextMeshProUGUI title;
 		public Button button;
+		public RectTransform contentHolder;
 
 		[Header("TestFilePaths - Remove This")]
 		public List<string> testJsonFilePaths;
@@ -78,6 +79,11 @@
 		public void Build()
 		{
 			Debug.Log($"Building...");
+			if (!Application.isPlaying)
+			{
+				Debug.Log("Not builing on editor...");
+				return;
+			}
 			button.interactable = false;
 
 			title.text = loadedData.Title;
