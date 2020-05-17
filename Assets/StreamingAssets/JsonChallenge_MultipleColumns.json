@@ -1,0 +1,52 @@
+{
+	"Title": "Team Members",
+	"ColumnHeaders": [
+		"ID",
+		"Name",
+		"Role",
+		"Nickname",
+		"Score",
+		"Flags"
+	],
+	"Data": [{
+			"ID": "001",
+			"Name": "John Doe",
+			"Role": "Engineer",
+			"Nickname": "KillerJo",
+			"Score": "0",
+			"Flags": "1"
+		},
+		{
+			"ID": "023",
+			"Name": "Claire Dawn",
+			"Role": "Engineer",
+			"Nickname": "Claw",
+			"Score": "130",
+			"Flags": "0"
+		},
+		{
+			"ID": "012",
+			"Name": "Paul Beef",
+			"Role": "Designer",
+			"Nickname": "BeefyPaul",
+			"Score": "2565",
+			"Flags": "4"
+		},
+		{
+			"ID": "056",
+			"Name": "Sally Sue",
+			"Role": "Artist",
+			"Nickname": "Sue5555",
+			"Score": "42",
+			"Flags": "32"
+		},
+		{
+			"ID": "906",
+			"Name": "Mr. Robot",
+			"Role": "Cursed",
+			"Nickname": "Hackerman",
+			"Score": "999",
+			"Flags": "128"
+		}
+	]
+}
